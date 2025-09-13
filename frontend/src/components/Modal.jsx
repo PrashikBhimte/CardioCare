@@ -1,15 +1,5 @@
-interface ModalProps {
-  result: {
-    prediction: number;
-    prediction_probability: {
-      "0": number;
-      "1": number;
-    };
-  };
-  onClose: () => void;
-}
 
-const Modal: React.FC<ModalProps> = ({ result, onClose }) => {
+const Modal = ({ result, onClose }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div className="bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">

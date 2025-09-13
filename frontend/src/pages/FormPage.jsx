@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Modal from "../components/Modal";
+import LoadingModal from "../components/LoadingModal";
 
 const FormPage = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const FormPage = () => {
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,6 +26,7 @@ const FormPage = () => {
     e.preventDefault();
     setError(null);
     setResult(null);
+    setIsLoading(true);
 
     const fieldsToValidate = [
       "Glucose",
@@ -40,6 +43,7 @@ const FormPage = () => {
         setError(
           `Please enter a valid value for ${field}. It cannot be zero or empty.`
         );
+        setIsLoading(false);
         return;
       }
     }
@@ -62,6 +66,8 @@ const FormPage = () => {
       setIsModalOpen(true);
     } catch (error) {
       setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,8 +109,9 @@ const FormPage = () => {
             <button
               type="submit"
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 rounded-lg text-lg transition duration-300"
+              disabled={isLoading}
             >
-              Predict
+              {isLoading ? "Processing..." : "Predict"}
             </button>
           </form>
           {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
@@ -113,6 +120,7 @@ const FormPage = () => {
       {isModalOpen && result && (
         <Modal result={result} onClose={handleCloseModal} />
       )}
+      {isLoading && <LoadingModal />}
     </div>
   );
 };
